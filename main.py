@@ -1,6 +1,6 @@
 from aiogram import Bot, Dispatcher, executor, types
 import random
-
+from klava import kb
 TOKEN = '6075262728:AAHYvpVMII4eaRraCZDoA6imAGCKvNrtlkU'
 bot = Bot(token = TOKEN)
 dp = Dispatcher(bot = bot)
@@ -25,8 +25,8 @@ async def on_startup(_):
     print('Я запустился')
 @dp.message_handler(commands=['start'])
 async def cmd_start(message: types.Message):
-    await  message.answer(text='Добро пожаловать!\n'
-                               'Список команд /help')
+    await  message.answer(text='Добро пожаловать!\nСписок команд /help',
+                          reply_markup=kb)
 
 @dp.message_handler(commands=['help'])
 async def cmd_help(message: types.Message):
