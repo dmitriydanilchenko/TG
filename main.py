@@ -1,49 +1,30 @@
-import logging
+from aiogram import Bot,types,Dispatcher,executor
+import random
 
-from aiogram import Bot, Dispatcher, executor, types
+TOKEN = '1170912818:AAF6m9CYUvAHroPGQlRnGCzKkq3C4-XjgC8'
+bot = Bot(token = TOKEN)
+dp = Dispatcher(bot = bot)
 
-API_TOKEN = '6075262728:AAHYvpVMII4eaRraCZDoA6imAGCKvNrtlkU'
+HELP_COMMAND = '''
+<b>start</b> - <em>начало работы</em>
+<b>help</b> - <em>варианты команд</em>
+<b>image</b> - <em>случайное фото</em>
+<b>stiker</b> - <em>случайный стикер</em>
+'''
 
-# Configure logging
-logging.basicConfig(level=logging.DEBUG)
+@dp.message_handler(commands=['start'])
+async def cmd_start(message: types.Message):
+    await  message.answer(text='Добро пожаловать!')
 
-bot = Bot(token=API_TOKEN)
-dp = Dispatcher(bot)
+    await message.delete()
 
 @dp.message_handler(commands=['help'])
-async def help_command(message: types.Message):
-    await message.reply('''
-    <b>/help</b> - <em>подсказка</em>
-    <b>/start</b> - <em>старт</em>
-    <b>/give</b> - <em>котик</em>
-    
-    ''', parse_mode='HTML')
-async def on_started(_):
+async def cmd_help(message: types.Message):
+    await  message.answer(text=HELP_COMMAND,
+                          parse_mode='HTML')
+async def on_startup(_):
     print('Я запустился')
 
-@dp.message_handler(content_types=['sticker'])
-async def id_stiker(message: types.message):
-    await message.answer(message.sticker.file_id)
 
-
-@dp.message_handler(commands=['give'])
-async def stiker (message: types.Message):
-    await message.reply("Смотри какой котик")
-    await bot.send_sticker(message.from_user.id, sticker= 'CAACAgIAAxkBAAEJIs9kc6V42moTlmzpbuSETmmD1e24dgACigADJetbEn1YfcTgFPfSLwQ')
-
-@dp.message_handler()
-async def serdechko (message: types.Message):
-    if message.text == '❤️':
-        await message.answer("🖤")
-
-'''
-@dp.message_handler()
-async def kolvo (message: types.Message):
-    await message.answer(text=str(message.text.count('m')))
-'''
-
-
-
-
-if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True, on_startup=on_started)
+if __name__ == "__main__":
+    executor.start_polling(dispatcher=dp, skip_updates=True, on_startup=on_startup)
